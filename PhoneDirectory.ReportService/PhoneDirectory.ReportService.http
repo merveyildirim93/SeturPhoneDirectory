@@ -1,0 +1,6 @@
+@PhoneDirectory.ReportService_HostAddress = http://localhost:5198
+
+GET {{PhoneDirectory.ReportService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
