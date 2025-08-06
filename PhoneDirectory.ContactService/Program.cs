@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using PhoneDirectory.ContactService.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ContactDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 
