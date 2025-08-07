@@ -21,4 +21,8 @@
     <ProjectReference Include="..\PhoneDirectory.Core\PhoneDirectory.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
