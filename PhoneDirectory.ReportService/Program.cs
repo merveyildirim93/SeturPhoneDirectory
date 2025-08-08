@@ -9,10 +9,11 @@ builder.Services.AddDbContext<ReportDbContext>(opt =>
 
 
 builder.Services.AddSingleton<ReportPublisher>();
-builder.Services.AddHttpClient("contact", c =>
+builder.Services.AddHttpClient("contact", client =>
 {
-    c.BaseAddress = new Uri(builder.Configuration["ContactService:BaseUrl"]!);
+    client.BaseAddress = new Uri(builder.Configuration["ContactService:BaseUrl"]!);
 });
+
 
 builder.Services.AddHostedService<ReportRequestConsumer>();
 

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PhoneDirectory.ContactService\PhoneDirectory.ContactService.csproj" />
     <ProjectReference Include="..\PhoneDirectory.Core\PhoneDirectory.Core.csproj" />
   </ItemGroup>
 

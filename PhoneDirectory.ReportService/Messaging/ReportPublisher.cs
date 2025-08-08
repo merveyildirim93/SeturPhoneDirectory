@@ -13,11 +13,13 @@ namespace PhoneDirectory.ReportService.Messaging
         public ReportPublisher(IConfiguration cfg)
         {
             var host = cfg["RabbitMq:Host"] ?? "localhost";
+            var port = int.Parse(cfg["RabbitMq:Port"] ?? "5672");
             var user = cfg["RabbitMq:User"] ?? "guest";
             var pass = cfg["RabbitMq:Pass"] ?? "guest";
-            _queue = cfg["RabbitMq:Queue"] ?? "report-requests";
 
-            var factory = new ConnectionFactory { HostName = host, UserName = user, Password = pass };
+            _queue = cfg["RabbitMq:Queue"];
+
+            var factory = new ConnectionFactory { HostName = host, Port = port, UserName = user, Password = pass };
             _conn = factory.CreateConnection();
             _channel = _conn.CreateModel();
             _channel.QueueDeclare(queue: _queue, durable: true, exclusive: false, autoDelete: false);

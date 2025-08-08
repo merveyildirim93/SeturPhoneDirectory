@@ -57,6 +57,13 @@ namespace PhoneDirectory.ContactService.Controllers
             return NoContent();
         }
 
+        [HttpGet("stats")]
+        public async Task<IActionResult> Stats([FromQuery] string location)
+        {
+            var (personCount, phoneCount) = await _personService.GetStatsByLocationAsync(location);
+            return Ok(new { location, personCount, phoneCount });
+        }
+
 
         #endregion
 

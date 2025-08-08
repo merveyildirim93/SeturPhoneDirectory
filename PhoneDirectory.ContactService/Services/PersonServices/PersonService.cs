@@ -38,5 +38,10 @@ namespace PhoneDirectory.ContactService.Services.PersonServices
             await _personRepository.SaveChangesAsync();
             return true;
         }
+
+        public async  Task<(int personCount, int phoneCount)> GetStatsByLocationAsync(string location)
+        {
+            return await _personRepository.GetStatsByLocationAsync(location);
+        }
     }
 }

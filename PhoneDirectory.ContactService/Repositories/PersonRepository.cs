@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhoneDirectory.ContactService.Data;
 using PhoneDirectory.Core.Entities;
+using PhoneDirectory.Core.Enums;
 
 namespace PhoneDirectory.ContactService.Repositories
 {
@@ -43,5 +44,18 @@ namespace PhoneDirectory.ContactService.Repositories
         {
             await _contactDbContext.SaveChangesAsync();
         }
+
+        public async Task<(int personCount, int phoneCount)> GetStatsByLocationAsync(string location)
+        {
+            var persons = await _contactDbContext.Persons
+                .Include(p => p.ContactInformations)
+                .Where(p => p.ContactInformations.Any(ci => ci.Type == ContactType.Location && ci.Value == location))
+                .ToListAsync();
+
+            var personCount = persons.Count;
+            var phoneCount = persons.Sum(p => p.ContactInformations.Count(ci => ci.Type == ContactType.Phone));
+            return (personCount, phoneCount);
+        }
+
     }
 }

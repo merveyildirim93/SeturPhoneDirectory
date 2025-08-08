@@ -1,93 +1,129 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PhoneDirectory.Core.Entities;
-using PhoneDirectory.Core.Enums;
-using PhoneDirectory.ReportService.Data;
+﻿using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System.Text;
+using PhoneDirectory.Core.Enums;
+using PhoneDirectory.Core.Entities;
+using PhoneDirectory.ReportService.Data;
+using PhoneDirectory.ReportService.Messaging;
 using System.Text.Json;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 
-
-namespace PhoneDirectory.ReportService.Messaging
+public class ReportRequestConsumer : BackgroundService
 {
-    public class ReportRequestConsumer : BackgroundService
+    private readonly IServiceProvider _sp;
+    private readonly IConfiguration _cfg;
+
+    private RabbitMQ.Client.IConnection _conn;
+    private RabbitMQ.Client.IModel _channel;
+    private readonly string _queue;
+    private readonly string ContactServiceBaseUrl;
+
+    public ReportRequestConsumer(IServiceProvider sp, IConfiguration cfg)
     {
-        private readonly IServiceProvider _sp;
-        private readonly IConfiguration _cfg;
-        private IConnection _conn;
-        private IModel _channel;
-        private string _queue;
+        _sp = sp;
+        _cfg = cfg;
 
-        public ReportRequestConsumer(IServiceProvider sp, IConfiguration cfg)
-        {
-            _sp = sp; _cfg = cfg;
-            var factory = new ConnectionFactory
-            {
-                HostName = cfg["RabbitMq:Host"] ?? "localhost",
-                UserName = cfg["RabbitMq:User"] ?? "guest",
-                Password = cfg["RabbitMq:Pass"] ?? "guest"
-            };
-            _queue = cfg["RabbitMq:Queue"] ?? "report-requests";
-            _conn = factory.CreateConnection();
-            _channel = _conn.CreateModel();
-            _channel.QueueDeclare(queue: _queue, durable: true, exclusive: false, autoDelete: false);
-            _channel.BasicQos(0, 1, false);
-        }
+        var host = _cfg["RabbitMq:Host"] ?? "localhost";
+        var port = int.TryParse(_cfg["RabbitMq:Port"], out var p) ? p : 5672;
+        var user = _cfg["RabbitMq:User"] ?? "guest";
+        var pass = _cfg["RabbitMq:Pass"] ?? "guest";
+        _queue = _cfg["RabbitMq:Queue"] ?? "report-requests";
+        ContactServiceBaseUrl = _cfg["ContactService:BaseUrl"];
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        var factory = new ConnectionFactory
         {
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += async (_, ea) =>
+            HostName = host,
+            Port = port,
+            UserName = user,
+            Password = pass,
+            DispatchConsumersAsync = true 
+        };
+
+        _conn = factory.CreateConnection();
+        _channel = _conn.CreateModel();
+
+        _channel.QueueDeclare(
+            queue: _queue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: null
+        );
+
+        _channel.BasicQos(prefetchSize: 0u, prefetchCount: 1, global: false);
+    }
+
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        var consumer = new AsyncEventingBasicConsumer(_channel);
+        consumer.Received += async (_, ea) =>
+        {
+            try
             {
+                var json = Encoding.UTF8.GetString(ea.Body.ToArray());
+                var msg = JsonSerializer.Deserialize<ReportRequestedMessage>(json);
+                if (msg is null)
+                    throw new InvalidOperationException("ReportRequestedMessage deserialize failed.");
+
                 using var scope = _sp.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<ReportDbContext>();
-                var http = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>().CreateClient("contact");
 
-                try
+                var http = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>()
+                                .CreateClient("contact");
+
+                var resp = await http.GetAsync($"/api/person/stats?location={Uri.EscapeDataString(msg.Location)}", stoppingToken);
+
+                resp.EnsureSuccessStatusCode();
+                var stat = await resp.Content.ReadFromJsonAsync<LocationStatsDto>(cancellationToken: stoppingToken);
+                if (stat is null)
+                    throw new InvalidOperationException("LocationStatsDto deserialize failed.");
+
+                var detail = new ReportDetail
                 {
-                    var json = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    var msg = JsonSerializer.Deserialize<ReportRequestedMessage>(json)!;
+                    ReportRequestId = msg.ReportId,
+                    Location = stat.Location,
+                    PersonCount = stat.PersonCount,
+                    PhoneNumberCount = stat.PhoneCount
+                };
+                await db.ReportDetails.AddAsync(detail, stoppingToken);
 
-                    var report = await db.ReportRequests.Include(r => r.ReportDetails)
-                        .FirstOrDefaultAsync(r => r.Id == msg.ReportId);
-                    if (report == null) { _channel.BasicAck(ea.DeliveryTag, false); return; }
-
-                    var resp = await http.GetAsync($"/api/person/stats?location={Uri.EscapeDataString(msg.Location)}");
-                    resp.EnsureSuccessStatusCode();
-                    var stat = await resp.Content.ReadFromJsonAsync<LocationStatsDto>();
-
-                    report.ReportDetails.Add(new ReportDetail
-                    {
-                        Location = stat!.Location,
-                        PersonCount = stat.PersonCount,
-                        PhoneNumberCount = stat.PhoneCount
-                    });
+                var report = await db.ReportRequests
+                                     .FirstOrDefaultAsync(r => r.Id == msg.ReportId, stoppingToken);
+                if (report != null)
+                {
                     report.Status = ReportStatus.Completed;
-                    await db.SaveChangesAsync();
-
-                    _channel.BasicAck(ea.DeliveryTag, false);
                 }
-                catch
-                {
-                    _channel.BasicNack(ea.DeliveryTag, false, true);
-                }
-            };
 
-            _channel.BasicConsume(queue: _queue, autoAck: false, consumer: consumer);
-            return Task.CompletedTask;
-        }
+                await db.SaveChangesAsync(stoppingToken);
 
-        public override void Dispose()
-        {
-            _channel?.Dispose();
-            _conn?.Dispose();
-            base.Dispose();
-        }
+                _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Consumer] Error: {ex.GetType().Name} - {ex.Message}");
+
+                _channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: true);
+            }
+        };
+
+        _channel.BasicConsume(queue: _queue, autoAck: false, consumer: consumer);
+
+        return Task.CompletedTask;
     }
-    public class LocationStatsDto
+
+    public override void Dispose()
     {
-        public string Location { get; set; }
-        public int PersonCount { get; set; }
-        public int PhoneCount { get; set; }
+        try { _channel?.Close(); } catch {}
+        try { _conn?.Close(); } catch { }
+        _channel?.Dispose();
+        _conn?.Dispose();
+        base.Dispose();
     }
+}
+
+public class LocationStatsDto
+{
+    public string Location { get; set; }
+    public int PersonCount { get; set; }
+    public int PhoneCount { get; set; }
 }

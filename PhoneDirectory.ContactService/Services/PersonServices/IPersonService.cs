@@ -8,5 +8,6 @@ namespace PhoneDirectory.ContactService.Services.PersonServices
         Task<Person?> GetByIdAsync(Guid id);
         Task AddAsync(Person person);
         Task<bool> DeleteAsync(Guid id);
+        Task<(int personCount, int phoneCount)> GetStatsByLocationAsync(string location);
     }
 }
