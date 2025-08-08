@@ -1,7 +1,7 @@
 ﻿using PhoneDirectory.ContactService.Repositories;
 using PhoneDirectory.Core.Entities;
 
-namespace PhoneDirectory.ContactService.Services
+namespace PhoneDirectory.ContactService.Services.PersonServices
 {
     public class PersonService : IPersonService
     {

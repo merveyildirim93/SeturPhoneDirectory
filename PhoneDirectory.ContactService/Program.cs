@@ -3,7 +3,8 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using PhoneDirectory.ContactService.Data;
 using PhoneDirectory.ContactService.Repositories;
-using PhoneDirectory.ContactService.Services;
+using PhoneDirectory.ContactService.Services.ContactInfoServices;
+using PhoneDirectory.ContactService.Services.PersonServices;
 using PhoneDirectory.ContactService.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<ContactDbContext>(options =>
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IContactInfoService, ContactInfoService>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();

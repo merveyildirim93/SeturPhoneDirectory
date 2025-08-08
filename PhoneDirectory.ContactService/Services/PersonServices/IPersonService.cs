@@ -1,6 +1,6 @@
 ﻿using PhoneDirectory.Core.Entities;
 
-namespace PhoneDirectory.ContactService.Services
+namespace PhoneDirectory.ContactService.Services.PersonServices
 {
     public interface IPersonService
     {
