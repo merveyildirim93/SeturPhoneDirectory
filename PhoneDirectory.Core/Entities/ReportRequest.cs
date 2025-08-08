@@ -6,7 +6,8 @@ namespace PhoneDirectory.Core.Entities
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime RequestedAt { get; set; } 
-
         public ReportStatus Status { get; set; }
+
+        public ICollection<ReportDetail> ReportDetails { get; set; } = new List<ReportDetail>();
     }
 }
