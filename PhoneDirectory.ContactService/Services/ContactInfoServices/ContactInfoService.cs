@@ -17,9 +17,7 @@ namespace PhoneDirectory.ContactService.Services.ContactInfoServices
         }
         public async Task<ContactInformation?> AddContactInfoAsync(Guid personId, ContactInformation info)
         {
-            var person = await _context.Persons
-                .Include(p => p.ContactInformations)
-                .FirstOrDefaultAsync(p => p.Id == personId);
+            var person = await _personRepository.GetByIdAsync(personId);
 
             if (person is null) return null;
 
@@ -27,7 +25,7 @@ namespace PhoneDirectory.ContactService.Services.ContactInfoServices
             info.PersonId = person.Id;        
             _context.Entry(info).State = EntityState.Added;
 
-            await _context.SaveChangesAsync();
+            await _personRepository.SaveChangesAsync();
             return info;
         }
 

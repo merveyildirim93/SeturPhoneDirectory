@@ -24,4 +24,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\PhoneDirectory.ContactService\PhoneDirectory.ContactService.csproj" />
+  </ItemGroup>
+
 </Project>

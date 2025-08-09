@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneDirectory.Core", "PhoneDirectory.Core\PhoneDirectory.Core.csproj", "{F966C6E0-65F1-4495-9088-0BB09492CD7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.Core", "PhoneDirectory.Core\PhoneDirectory.Core.csproj", "{F966C6E0-65F1-4495-9088-0BB09492CD7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneDirectory.ContactService", "PhoneDirectory.ContactService\PhoneDirectory.ContactService.csproj", "{37CD5DE3-23A5-4C51-9BD8-2939C4501201}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.ContactService", "PhoneDirectory.ContactService\PhoneDirectory.ContactService.csproj", "{37CD5DE3-23A5-4C51-9BD8-2939C4501201}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneDirectory.ReportService", "PhoneDirectory.ReportService\PhoneDirectory.ReportService.csproj", "{0BA0608B-284F-475B-83A4-07FE3631F96F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.ReportService", "PhoneDirectory.ReportService\PhoneDirectory.ReportService.csproj", "{0BA0608B-284F-475B-83A4-07FE3631F96F}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "PhoneDirectory.ui", "PhoneDirectory.ui\PhoneDirectory.ui.esproj", "{0937B549-2084-49BE-9F86-444ABA79AD24}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.ContactService.Tests", "PhoneDirectory.Tests\PhoneDirectory.ContactService.Tests\PhoneDirectory.ContactService.Tests.csproj", "{540DCBE5-1B2D-4A76-BB29-BB73973CB474}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.ReportService.Tests", "PhoneDirectory.Tests\PhoneDirectory.ReportService.Tests\PhoneDirectory.ReportService.Tests.csproj", "{8779E773-C59A-4E80-8B4C-7236D268A711}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +39,14 @@ Global
 		{0937B549-2084-49BE-9F86-444ABA79AD24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0937B549-2084-49BE-9F86-444ABA79AD24}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0937B549-2084-49BE-9F86-444ABA79AD24}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{540DCBE5-1B2D-4A76-BB29-BB73973CB474}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{540DCBE5-1B2D-4A76-BB29-BB73973CB474}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{540DCBE5-1B2D-4A76-BB29-BB73973CB474}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{540DCBE5-1B2D-4A76-BB29-BB73973CB474}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8779E773-C59A-4E80-8B4C-7236D268A711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8779E773-C59A-4E80-8B4C-7236D268A711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8779E773-C59A-4E80-8B4C-7236D268A711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8779E773-C59A-4E80-8B4C-7236D268A711}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
