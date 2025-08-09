@@ -1,21 +1,21 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using PhoneDirectory.ContactService.Data;
+using PhoneDirectory.ReportService.Data;
 
-namespace PhoneDirectory.ContactService.Tests.TestHelpers
+namespace PhoneDirectory.ReportService.Tests.TestHelpers
 {
     public static class SqliteInMemory
     {
-        public static (ContactDbContext ctx, SqliteConnection conn) CreateContactContext()
+        public static (ReportDbContext ctx, SqliteConnection conn) CreateReportContext()
         {
             var conn = new SqliteConnection("DataSource=:memory:");
             conn.Open();
 
-            var options = new DbContextOptionsBuilder<ContactDbContext>()
+            var options = new DbContextOptionsBuilder<ReportDbContext>()
                 .UseSqlite(conn)
                 .Options;
 
-            var ctx = new ContactDbContext(options);
+            var ctx = new ReportDbContext(options);
             ctx.Database.EnsureCreated();
             return (ctx, conn);
         }

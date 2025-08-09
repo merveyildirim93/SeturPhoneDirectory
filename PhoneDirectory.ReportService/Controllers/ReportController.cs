@@ -12,11 +12,13 @@ namespace PhoneDirectory.ReportService.Controllers
     public class ReportController : ControllerBase
     {
         private readonly ReportDbContext _db;
-        private readonly ReportPublisher _publisher;
+        //private readonly ReportPublisher _publisher;
+        private readonly IRabbitPublisher _publisher;
 
-        public ReportController(ReportDbContext db, ReportPublisher publisher)
+        public ReportController(ReportDbContext db, IRabbitPublisher publisher)
         {
-            _db = db; _publisher = publisher;
+            _db = db; 
+            _publisher = publisher;
         }
 
         [HttpPost]

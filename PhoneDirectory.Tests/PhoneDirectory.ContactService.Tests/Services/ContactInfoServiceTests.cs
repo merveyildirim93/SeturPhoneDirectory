@@ -1,15 +1,10 @@
 ﻿using FluentAssertions;
-using PhoneDirectory.ContactService.Data;
 using PhoneDirectory.ContactService.Repositories;
 using PhoneDirectory.ContactService.Services.ContactInfoServices;
 using PhoneDirectory.ContactService.Tests.TestHelpers;
 using PhoneDirectory.Core.Entities;
 using PhoneDirectory.Core.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Xunit;
 
 namespace PhoneDirectory.ContactService.Tests.Services
 {
