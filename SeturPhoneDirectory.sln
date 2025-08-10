@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.ContactServi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.ReportService", "PhoneDirectory.ReportService\PhoneDirectory.ReportService.csproj", "{0BA0608B-284F-475B-83A4-07FE3631F96F}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "PhoneDirectory.ui", "PhoneDirectory.ui\PhoneDirectory.ui.esproj", "{0937B549-2084-49BE-9F86-444ABA79AD24}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.ContactService.Tests", "PhoneDirectory.Tests\PhoneDirectory.ContactService.Tests\PhoneDirectory.ContactService.Tests.csproj", "{540DCBE5-1B2D-4A76-BB29-BB73973CB474}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneDirectory.ReportService.Tests", "PhoneDirectory.Tests\PhoneDirectory.ReportService.Tests\PhoneDirectory.ReportService.Tests.csproj", "{8779E773-C59A-4E80-8B4C-7236D268A711}"
@@ -33,12 +31,6 @@ Global
 		{0BA0608B-284F-475B-83A4-07FE3631F96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BA0608B-284F-475B-83A4-07FE3631F96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BA0608B-284F-475B-83A4-07FE3631F96F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0937B549-2084-49BE-9F86-444ABA79AD24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0937B549-2084-49BE-9F86-444ABA79AD24}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0937B549-2084-49BE-9F86-444ABA79AD24}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{0937B549-2084-49BE-9F86-444ABA79AD24}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0937B549-2084-49BE-9F86-444ABA79AD24}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0937B549-2084-49BE-9F86-444ABA79AD24}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{540DCBE5-1B2D-4A76-BB29-BB73973CB474}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{540DCBE5-1B2D-4A76-BB29-BB73973CB474}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{540DCBE5-1B2D-4A76-BB29-BB73973CB474}.Release|Any CPU.ActiveCfg = Release|Any CPU
