@@ -89,9 +89,15 @@ public class ReportRequestConsumer : BackgroundService
 
                 var report = await db.ReportRequests
                                      .FirstOrDefaultAsync(r => r.Id == msg.ReportId, stoppingToken);
+
                 if (report != null)
                 {
                     report.Status = ReportStatus.Completed;
+                    Console.WriteLine($"[Consumer] Report {report.Id} marked as Completed.");
+                }
+                else
+                {
+                    Console.WriteLine($"[Consumer] Report not found: {msg.ReportId}");
                 }
 
                 await db.SaveChangesAsync(stoppingToken);
@@ -101,7 +107,6 @@ public class ReportRequestConsumer : BackgroundService
             catch (Exception ex)
             {
                 Console.WriteLine($"[Consumer] Error: {ex.GetType().Name} - {ex.Message}");
-
                 _channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: true);
             }
         };
