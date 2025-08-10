@@ -47,5 +47,31 @@ namespace PhoneDirectory.ContactService.Mappings
                     }).ToList() ?? new()
             };
         }
+
+        public static Person ToEntityForUpdate(this PersonUpdateRequestDto dto)
+        {
+            var person = new Person
+            {
+                Id = dto.Id,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Company = dto.Company
+            };
+
+            if (dto.Contacts != null)
+            {
+                foreach (var c in dto.Contacts)
+                {
+                    person.ContactInformations.Add(new ContactInformation
+                    {
+                        Type = (ContactType)c.Type,
+                        Value = c.Value
+                    });
+                }
+            }
+
+            return person;
+        }
+
     }
 }

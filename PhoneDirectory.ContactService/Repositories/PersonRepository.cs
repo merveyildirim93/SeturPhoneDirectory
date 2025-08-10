@@ -45,6 +45,11 @@ namespace PhoneDirectory.ContactService.Repositories
             await _contactDbContext.SaveChangesAsync();
         }
 
+        public async Task UpdateAsync(Person person)
+        {
+             _contactDbContext.Persons.Update(person);
+        }
+
         public async Task<(int personCount, int phoneCount)> GetStatsByLocationAsync(string location)
         {
             var persons = await _contactDbContext.Persons

@@ -1,4 +1,5 @@
-﻿using PhoneDirectory.Core.Entities;
+﻿using PhoneDirectory.ContactService.Dtos;
+using PhoneDirectory.Core.Entities;
 
 namespace PhoneDirectory.ContactService.Services.PersonServices
 {
@@ -9,5 +10,6 @@ namespace PhoneDirectory.ContactService.Services.PersonServices
         Task AddAsync(Person person);
         Task<bool> DeleteAsync(Guid id);
         Task<(int personCount, int phoneCount)> GetStatsByLocationAsync(string location);
+        Task<bool> UpdateAsync(Person person);
     }
 }

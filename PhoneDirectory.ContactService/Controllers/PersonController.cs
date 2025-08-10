@@ -22,7 +22,7 @@ namespace PhoneDirectory.ContactService.Controllers
         #region PERSON OPERATIONS
 
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] PersonCreateRequestDto dto)
         {
             var person = dto.ToEntity();
@@ -32,7 +32,18 @@ namespace PhoneDirectory.ContactService.Controllers
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
         }
 
-        [HttpGet]
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] PersonUpdateRequestDto dto)
+        {
+            var person = dto.ToEntityForUpdate();
+            var updated = await _personService.UpdateAsync(person);
+            if (!updated)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<PersonResponseDto>>> GetAll()
         {
             var people = await _personService.GetAllAsync();
@@ -40,7 +51,7 @@ namespace PhoneDirectory.ContactService.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("GetById/{id:guid}")]
         public async Task<ActionResult<PersonResponseDto>> GetById(Guid id)
         {
             var person = await _personService.GetByIdAsync(id);
@@ -49,7 +60,7 @@ namespace PhoneDirectory.ContactService.Controllers
             return Ok(person.ToResponse());
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("Delete/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var ok = await _personService.DeleteAsync(id);
@@ -57,7 +68,7 @@ namespace PhoneDirectory.ContactService.Controllers
             return NoContent();
         }
 
-        [HttpGet("stats")]
+        [HttpGet("Stats")]
         public async Task<IActionResult> Stats([FromQuery] string location)
         {
             var (personCount, phoneCount) = await _personService.GetStatsByLocationAsync(location);

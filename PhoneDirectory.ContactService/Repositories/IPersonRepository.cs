@@ -10,5 +10,6 @@ namespace PhoneDirectory.ContactService.Repositories
         void Delete(Person person);
         Task SaveChangesAsync();
         Task<(int personCount, int phoneCount)> GetStatsByLocationAsync(string location);
+        Task UpdateAsync(Person person);
     }
 }
