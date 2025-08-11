@@ -18,6 +18,7 @@ Proje **.NET 8** platformu kullanılarak geliştirilmiştir.
 * PostgreSQL (ContactDb ve ReportDb olmak üzere 2 ayrı veritabanı)
 * RabbitMQ (Mesaj Kuyruğu olarak)
 * Docker (PostgreSQL ve RabbitMQ servisleri için)
+* DBeaver (PostgreSQL için)
 * xUnit (Birim testleri için)
 * Swagger (API dokümantasyonu ve testi için)
 
